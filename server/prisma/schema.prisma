@@ -26,7 +26,7 @@ model Organizer {
   name     String
   email    String @unique
   password String
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @db.ObjectId
 }
 
