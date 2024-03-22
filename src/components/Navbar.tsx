@@ -1,4 +1,6 @@
 import { ModeToggle } from "@/components/mode-toggle";
+import { CircleUserRound } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -6,7 +8,8 @@ const Navbar = () => {
       <h1>EventMgmt</h1>
       <ul className="flex items-center gap-4">
         <li>1</li>
-        <li>2</li>
+        <Link to="/profile"><CircleUserRound /></Link>
+        <li></li>
         <ModeToggle />
 
       </ul>
