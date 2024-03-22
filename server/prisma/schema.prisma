@@ -13,11 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  email   String   @unique
-  name    String?
-  type    String
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
+  name     String?
+  type     String
+  password String
+}
+
+model Organizer {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
   password String
 }
