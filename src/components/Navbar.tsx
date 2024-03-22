@@ -1,4 +1,4 @@
-import React from "react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const Navbar = () => {
   return (
@@ -7,6 +7,8 @@ const Navbar = () => {
       <ul className="flex items-center gap-4">
         <li>1</li>
         <li>2</li>
+        <ModeToggle />
+
       </ul>
     </nav>
   );
