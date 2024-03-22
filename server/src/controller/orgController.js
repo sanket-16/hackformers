@@ -86,31 +86,33 @@ const organizationController = {
     }
   },
 
-   addOrganizerToOrganization : async (req, res) => {
+  addOrganizerToOrganization: async (req, res) => {
     try {
       const { organizationId } = req.params;
       const { organizerId } = req.body;
-     
+
       // Check if organization and organizer exist
       // const organizationExists = await prisma.organization.findUnique({ where: { id: organizationId } });
       const organizerExists = await prisma.organizer.findUnique({ where: { id: organizerId } });
-  
+
       if (!organizerExists) {
         return res.status(404).json({ error: "Organization or organizer not found" });
       }
-  
+
       // Add the organizer to the organization's list of organizers
-      const organizer = await prisma.organization.update({
-        where: { id: organizerId },
+      const updatedOrganization = await prisma.organization.update({
+        where: { id: organizationId },
         data: {
-          organizationId:organizationId,
-          name:organizerExists.name,
-          email:organizerExists.email,
-          password:organizerExists.password 
+          organizers: {
+            connect: { id: organizerId } // Connect organizer to organization
+          }
         },
+        include: {
+          organizers: true // Include organizers in the response
+        }
       });
-  
-      res.status(200).json({ message: "Organizer added to organization successfully",organizer });
+
+      res.status(200).json({ message: "Organizer added to organization successfully", updatedOrganization });
     } catch (error) {
       console.error("Error adding organizer to organization:", error);
       res.status(500).json({ error: "Unable to add organizer to organization" });
@@ -120,4 +122,4 @@ const organizationController = {
 
 }
 
-module.exports = { orgController,organizationController };
+module.exports = { orgController, organizationController };
