@@ -1,5 +1,6 @@
 const express = require('express');
 const userRoutes = require('./src/routes/userRoutes')
+const orgRoutes = require('./src/routes/orgRoutes')
 const cors = require('cors')
 const passport = require('passport');
 require('./src/passport')
@@ -21,6 +22,7 @@ app.get('/',(req,res)=>{
 })
 
 app.use(userRoutes);
+app.use('/org',orgRoutes);
 
 
 

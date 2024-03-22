@@ -16,7 +16,18 @@ passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
             }
         })
 
-        console.log(user);
+        if(!user){
+            const organizer = await prisma.organizer.findUnique({
+                where: {
+                    id: jwt_payload.id
+                }
+            })
+
+            console.log(organizer)
+            if(organizer) return done(null, organizer);
+        }
+
+        // console.log(user);
         if (user) return done(null, user);
 
     } catch (error) {
