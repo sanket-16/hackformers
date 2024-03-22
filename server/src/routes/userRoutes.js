@@ -12,6 +12,7 @@ router.post("/signin", authController.signin);
 router.get("/protected", passport.authenticate('jwt', { session: false }),(req,res)=>{
     res.send(req.user)
 })
+router.get("/user/:id", authController.getUser);
 
 
 module.exports = router;
