@@ -89,11 +89,11 @@ const organizationController = {
   addOrganizerToOrganization: async (req, res) => {
     try {
       const { organizationId } = req.params;
-      const { organizerId } = req.body;
+      const { organizerEmail } = req.body;
 
       // Check if organization and organizer exist
       // const organizationExists = await prisma.organization.findUnique({ where: { id: organizationId } });
-      const organizerExists = await prisma.organizer.findUnique({ where: { id: organizerId } });
+      const organizerExists = await prisma.organizer.findUnique({ where: { email: organizerEmail } });
 
       if (!organizerExists) {
         return res.status(404).json({ error: "Organization or organizer not found" });
@@ -104,7 +104,7 @@ const organizationController = {
         where: { id: organizationId },
         data: {
           organizers: {
-            connect: { id: organizerId } // Connect organizer to organization
+            connect: { id: organizerExists.id } // Connect organizer to organization
           }
         },
         include: {
@@ -117,8 +117,22 @@ const organizationController = {
       console.error("Error adding organizer to organization:", error);
       res.status(500).json({ error: "Unable to add organizer to organization" });
     }
+  },
+  getOrganization: async(req,res)=>{
+    try {
+      const{organizationId} = req.params;
+      const organization = await prisma.organization.findUnique({
+        where:{id:organizationId},
+        include:{
+          organizers:true
+        }
+      })
+      res.status(201).json({organization})
+    } catch (error) {
+      console.log("Error finding Organization");
+      res.status(501).json({"message":"Internal Server Error",error})
+    }
   }
-
 
 }
 
