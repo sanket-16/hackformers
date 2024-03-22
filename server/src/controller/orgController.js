@@ -3,10 +3,10 @@ const prisma = require('../prisma')
 const jwt = require('jsonwebtoken');
 
 const orgController = { // user Authentication Controller 
-  signup: async (req, res) => {  
+  signup: async (req, res) => {
     console.log(req.body);
     try {
-      const {name, email, password} = req.body;
+      const { name, email, password } = req.body;
       const hashed_password = bcrypt.hashSync(password, 10);
       const user = await prisma.organizer.create({
         data: {
@@ -48,20 +48,76 @@ const orgController = { // user Authentication Controller
       res.status(500).json({ "error": error });
     }
   },
-  getUser: async(req,res) => {
+  getOrg: async (req, res) => {
     try {
-      const {id} = req.params;
-      const user = await prisma.user.findUnique({
+      const { id } = req.params;
+      const user = await prisma.organizer.findUnique({
         where: {
           id: id
         }
       })
-      res.status(200).json({user});
+      res.status(200).json({ user });
 
     } catch (error) {
-      res.status(501).json({"Message": "Internal Server Error"})
+      res.status(501).json({ "Message": "Internal Server Error" })
     }
   }
 }
 
-module.exports = {orgController};
+const organizationController = {
+
+  createOrganization: async (req, res) => {
+
+    try {
+      const { name, description } = req.body;
+      const leaderId = req.user.id;
+      const organization = await prisma.organization.create({
+        data: {
+          name,
+          description,
+          leaderId,
+          // organizers:[leaderId]
+        },
+      });
+      res.status(201).json({ organization });
+    } catch (error) {
+      console.error("Error creating organization:", error);
+      res.status(500).json({ error: "Unable to create organization" });
+    }
+  },
+
+   addOrganizerToOrganization : async (req, res) => {
+    try {
+      const { organizationId } = req.params;
+      const { organizerId } = req.body;
+     
+      // Check if organization and organizer exist
+      // const organizationExists = await prisma.organization.findUnique({ where: { id: organizationId } });
+      const organizerExists = await prisma.organizer.findUnique({ where: { id: organizerId } });
+  
+      if (!organizerExists) {
+        return res.status(404).json({ error: "Organization or organizer not found" });
+      }
+  
+      // Add the organizer to the organization's list of organizers
+      const organizer = await prisma.organization.update({
+        where: { id: organizerId },
+        data: {
+          organizationId:organizationId,
+          name:organizerExists.name,
+          email:organizerExists.email,
+          password:organizerExists.password 
+        },
+      });
+  
+      res.status(200).json({ message: "Organizer added to organization successfully",organizer });
+    } catch (error) {
+      console.error("Error adding organizer to organization:", error);
+      res.status(500).json({ error: "Unable to add organizer to organization" });
+    }
+  }
+
+
+}
+
+module.exports = { orgController,organizationController };
