@@ -2,6 +2,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home";
 import ProfilePage from "./pages/Profile";
+import AuthPage from "./pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,20 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/auth",
+    element: <AuthPage />,
+    children: [
+      {
+        path: "login",
+        element: <p>Login</p>,
+      },
+      {
+        path: "signup",
+        element: <p>Signup</p>,
+      },
+    ],
   },
 ]);
 
