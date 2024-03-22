@@ -2,16 +2,16 @@ const bcrypt = require('bcryptjs'); // used to hash/encrypt the password
 const prisma = require('../prisma')
 const jwt = require('jsonwebtoken');
 
-const authController = { // user Authentication Controller 
+const orgController = { // user Authentication Controller 
   signup: async (req, res) => {  
     console.log(req.body);
     try {
-      const { email, password ,type} = req.body;
+      const {name, email, password} = req.body;
       const hashed_password = bcrypt.hashSync(password, 10);
-      const user = await prisma.user.create({
+      const user = await prisma.organizer.create({
         data: {
+          name: name,
           email: email,
-          type: type,
           password: hashed_password,
         }
       })
@@ -26,7 +26,7 @@ const authController = { // user Authentication Controller
     try {
       const { email, password } = req.body
       // console.log(req.body);
-      const user = await prisma.user.findUnique({
+      const user = await prisma.organizer.findUnique({
         where: {
           email: email
         }
@@ -39,7 +39,6 @@ const authController = { // user Authentication Controller
       const payload = {
         email: email,
         id: user.id,
-        type:user
       }
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
@@ -65,4 +64,4 @@ const authController = { // user Authentication Controller
   }
 }
 
-module.exports = {authController};
+module.exports = {orgController};
