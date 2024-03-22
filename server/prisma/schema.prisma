@@ -21,3 +21,4 @@ model User {
   type    String
   password String
 }
+
