@@ -49,10 +49,10 @@ const authController = { // user Authentication Controller
   },
   getUser: async(req,res) => {
     try {
-      const {id} = req.params;
+    //   const {id} = req.params;
       const user = await prisma.user.findUnique({
         where: {
-          id: id
+          id: req.user.id
         }
       })
       res.status(200).json({user});
