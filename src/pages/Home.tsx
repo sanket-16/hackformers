@@ -1,8 +1,8 @@
 import { ModeToggle } from "@/components/mode-toggle";
-import { Button } from "@/components/ui/button";
-import React from "react";
+
 import reactLogo from "../assets/react.svg";
 import viteLogo from "/vite.svg";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
@@ -18,7 +18,7 @@ const HomePage = () => {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <Button>Hi</Button>
+        <Link to={"/auth"}>Hi</Link>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

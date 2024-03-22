@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home";
 import ProfilePage from "./pages/Profile";
 import AuthPage from "./pages/Auth";
+import Navbar from "./components/Navbar";
 
 const router = createBrowserRouter([
   {
@@ -16,23 +17,24 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
-    children: [
-      {
-        path: "login",
-        element: <p>Login</p>,
-      },
-      {
-        path: "signup",
-        element: <p>Signup</p>,
-      },
-    ],
+  },
+  {
+    path: "/auth/login",
+    element: <p>Login</p>,
+  },
+  {
+    path: "/auth/signup",
+    element: <p>Signup</p>,
   },
 ]);
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
+      <main className="px-20">
+        <Navbar />
+        <RouterProvider router={router} />
+      </main>
     </ThemeProvider>
   );
 }
