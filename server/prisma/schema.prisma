@@ -14,17 +14,20 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  email    String  @unique
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
   name     String?
   password String
+  eventIds String[] @db.ObjectId
+
+  events Event[] @relation(fields: [eventIds], references: [id])
 }
 
 model Organizer {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  email    String @unique
-  password String
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String        @unique
+  password       String
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @db.ObjectId
 }
@@ -35,4 +38,25 @@ model Organization {
   name        String
   leaderId    String      @unique @db.ObjectId
   organizers  Organizer[]
+  events      Event[]
+}
+
+model Event {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  location        String
+  description     String
+  date            DateTime
+  images          String[]
+  participantsIds String[]     @db.ObjectId
+  participants    User[]       @relation(fields: [participantsIds], references: [id])
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  organizationId  String       @db.ObjectId
+  status          status       @default(PENDING)
+}
+
+enum status {
+  ACCEPT
+  REJECT
+  PENDING
 }
