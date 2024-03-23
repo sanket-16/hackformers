@@ -2,7 +2,6 @@ export type SignUpProps = {
   email: string;
   name: string;
   password: string;
-  type: "freelancer" | "client";
 };
 
 export type LoginProps = {
@@ -22,18 +21,22 @@ export const parseJwt = async (token: string) => {
   }
 };
 
-export const signUp = async ({ email, name, password, type }: SignUpProps) => {
-  const response = await fetch(`${import.meta.env.VITE_API}`, {
+export const signUp = async ({ email, name, password }: SignUpProps) => {
+  console.log(email, name, password);
+  const response = await fetch(`${import.meta.env.VITE_API}/signup`, {
     method: "POST",
-    body: JSON.stringify({ email, name, password, type }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, name, password }),
   });
   const data = await response.json();
   return data;
 };
 
 export const login = async ({ email, password }: LoginProps) => {
-  const response = await fetch(`${import.meta.env.VITE_API}`, {
+  const response = await fetch(`${import.meta.env.VITE_API}/signin`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+
     body: JSON.stringify({ email, password }),
   });
   const data = await response.json();
@@ -60,17 +63,27 @@ export const login = async ({ email, password }: LoginProps) => {
 //   return response.data;
 // };
 
-// export const getUser = async () => {
-//   const token = await JSON.parse(localStorage.getItem("token")!);
-//   const authorizationBearer = `${token.jwt.type} ${token.jwt.token}`;
-//   // console.log(authorizationBearer);
-//   const response = await axios.post(
-//     `${import.meta.env.VITE_API}/auth/me`,
-//     {},
-//     { headers: { Authorization: authorizationBearer } }
-//   );
-//   // console.log(response.data.data);
-//   return response.data.data;
-// };
+export const getUser = async (): Promise<{
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}> => {
+  const token = await localStorage.getItem("token");
+  console.log(token);
+  // const authorizationBearer = `${token.jwt.type} ${token.jwt.token}`;
+  // // console.log(authorizationBearer);
+  const response = await fetch(`${import.meta.env.VITE_API}/user`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: String(token),
+    },
+  });
+  const data = await response.json();
+  console.log(data, response);
+  return data;
+};
 
 // export default loginDetails;

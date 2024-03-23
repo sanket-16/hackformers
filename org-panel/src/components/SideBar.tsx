@@ -1,18 +1,23 @@
-import {
-  Mail,
-  PackageSearch,
-  PieChart,
-  SquareKanban,
-  Users,
-} from "lucide-react";
-import { Link, Outlet } from "react-router-dom";
+import { getUser } from "@/lib/auth";
+import { useQuery } from "@tanstack/react-query";
+import { Mail, PieChart, SquareKanban, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ModeToggle } from "./mode-toggle";
+import { Button } from "./ui/button";
 
 const SideBar = () => {
+  const { data, status } = useQuery({
+    queryKey: ["getUser"],
+    queryFn: () => getUser(),
+  });
+  console.log(data);
+  if (status === "error" || status === "pending") return null;
+
   return (
     <div>
       <button
         type="button"
-        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className="inline-flex items-center p-2 mt-2 ms-3 text-sm rounded-lg sm:hidden "
       >
         <span className="sr-only">Open sidebar</span>
       </button>
@@ -21,110 +26,75 @@ const SideBar = () => {
         id="separator-sidebar"
         className="sticky top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div className="h-full px-3 py-4 overflow-y-auto">
           <ul className="space-y-2 font-medium">
-            <li>
-              <Link
-                to="/dashboard"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <PieChart />
-                <span className="ms-3">Dashboard</span>
-              </Link>
+            <li className="font-bold text-2xl p-4">
+              <Link to="/dashboard">EventMGMT</Link>
             </li>
             <li>
-              <Link
-                to="/event"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              <Button
+                asChild
+                className="w-full flex items-center justify-start"
+                variant="ghost"
               >
-                <SquareKanban />
-                <span className="flex-1 ms-3 whitespace-nowrap">Event</span>
-                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                  Pro
-                </span>
-              </Link>
+                <Link
+                  to="/dashboard"
+                  className="flex items-center p-2 rounded-lg  group"
+                >
+                  <PieChart />
+                  <span className="ms-3">Dashboard</span>
+                </Link>
+              </Button>
             </li>
             <li>
-              <Link
-                to="/organization"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              <Button
+                asChild
+                className="w-full flex items-center justify-start"
+                variant="ghost"
               >
-                <Mail />
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Organization
-                </span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                  3
-                </span>
-              </Link>
+                <Link
+                  to="/event"
+                  className="flex items-center p-2  rounded-lg  group"
+                >
+                  <SquareKanban />
+                  <span className="flex-1 ms-3 whitespace-nowrap">Event</span>
+                </Link>
+              </Button>
             </li>
             <li>
-              <Link
-                to="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              <Button
+                asChild
+                className="w-full flex items-center justify-start"
+                variant="ghost"
               >
-                <Users />
-                <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <PackageSearch />
-                <span className="flex-1 ms-3 whitespace-nowrap">Products</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
-              </Link>
+                <Link
+                  to="/organization"
+                  className="flex items-center p-2 rounded-lg  group"
+                >
+                  <Mail />
+                  <span className="flex-1 ms-3 whitespace-nowrap">
+                    Organization
+                  </span>
+                </Link>
+              </Button>
             </li>
           </ul>
-          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
+          <ul className="pt-4 mt-4 space-y-2 font-medium border-t">
             <li>
-              <Link
-                to="/"
-                className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-              >
-                <span className="ms-3">Upgrade to Pro</span>
-              </Link>
+              <Button asChild variant="outline" className="w-full">
+                <Link
+                  to="/profile"
+                  className="flex items-center p-2 rounded-lg  group"
+                >
+                  <User />
+                  <span className="flex-1 ms-3 whitespace-nowrap">
+                    {data.user.name}
+                  </span>
+                </Link>
+              </Button>
             </li>
             <li>
-              <Link
-                to="/"
-                className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-              >
-                <span className="ms-3">Documentation</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-              >
-                <span className="ms-3">Components</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/"
-                className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group"
-              >
-                <span className="ms-3">Help</span>
-              </Link>
+              <ModeToggle />
             </li>
           </ul>
         </div>
