@@ -36,6 +36,20 @@ const eventController = {
         }
     },
 
+    getEvent: async(req,res) =>{
+        try {
+            const {id} = req.params;
+            const event = await prisma.event.findUnique({
+                where: {
+                    id: id
+                }
+            })
+            res.status(200).json({event})
+        } catch (error) {
+            res.status(500).json({"Internal Server Error": error})
+        }
+    },
+
     updateUserinEvent:async(req,res)=>{
 
         try {
