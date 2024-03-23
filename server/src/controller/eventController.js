@@ -172,6 +172,26 @@ const eventController = {
 
 
     },
+    participatedEvents :async(req,res)=>{
+
+    try {
+        const events = await prisma.event.findMany({
+            where:{
+                participantsIds:{
+                    has:req.user.id
+                }
+            }
+        })
+        // JSON.parse(events);
+        // console.log(events); 
+        res.status(201).json({events});
+    } catch (error) {
+        console.log(error);
+        res.status(501).json({error});
+    } 
+
+
+    },
     getValidEvents : async(req,res)=>{
 
         try {
