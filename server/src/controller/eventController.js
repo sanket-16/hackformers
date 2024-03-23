@@ -31,13 +31,13 @@ const eventController = {
         }
     },
 
-    getevent: async(req,res) =>{
-        try {
+    // getevent: async(req,res) =>{
+    //     try {
             
-        } catch (error) {
-            res.status(500).json({"Internal Server Error": "error"})
-        }
-    }
+    //     } catch (error) {
+    //         res.status(500).json({"Internal Server Error": "error"})
+    //     }
+    // }
 
 }
 

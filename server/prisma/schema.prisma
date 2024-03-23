@@ -40,6 +40,7 @@ model Organization {
   leaderId    String      @unique @db.ObjectId
   organizers  Organizer[]
   events      Event[]
+  images String[]
 }
 
 model Event {

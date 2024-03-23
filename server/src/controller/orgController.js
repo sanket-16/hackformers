@@ -69,12 +69,13 @@ const organizationController = {
   createOrganization: async (req, res) => {
 
     try {
-      const { name, description } = req.body;
+      const { name, description, images } = req.body;
       const leaderId = req.user.id;
       const organization = await prisma.organization.create({
         data: {
           name,
           description,
+          images,
           leaderId,
           // organizers:[leaderId]
         },
