@@ -6,8 +6,10 @@ const passport = require('passport');
 const router = express.Router();
 
 router.post("/create", passport.authenticate('jwt', { session: false }), eventController.createEvent);
-router.post("/addUsertoEvent/:eventId",passport.authenticate('jwt', { session: false }),eventController.updateUserinEvent);
-router.get("/getEvent/:id", passport.authenticate('jwt', { session: false }),eventController.getEvent);
-router.put("/updateStatus/:id",passport.authenticate('jwt', { session: false }),eventController.updateStatus);
-router.get("/orgEvents",passport.authenticate('jwt', { session: false }),eventController.eventAccordingOrg)
+router.post("/addUsertoEvent/:eventId", passport.authenticate('jwt', { session: false }), eventController.updateUserinEvent);
+router.get("/getEvent/:id", passport.authenticate('jwt', { session: false }), eventController.getEvent);
+router.put("/updateStatus/:id", passport.authenticate('jwt', { session: false }), eventController.updateStatus);
+router.get("/orgEvents", passport.authenticate('jwt', { session: false }), eventController.eventAccordingOrg)
+router.put("/addParticipants/:eventId", passport.authenticate('jwt', { session: false }), eventController.addParticipants)
+
 module.exports = router;
