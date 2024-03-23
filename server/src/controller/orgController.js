@@ -100,6 +100,8 @@ const organizationController = {
       }
 
       // Add the organizer to the organization's list of organizers
+      console.log(organizerExists)
+      
       const updatedOrganization = await prisma.organization.update({
         where: { id: organizationId },
         data: {
