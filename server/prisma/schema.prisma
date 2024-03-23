@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  email    String   @unique
-  name     String?
-  password String
-  eventIds String[] @db.ObjectId
-
-  events Event[] @relation(fields: [eventIds], references: [id])
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  email                String   @unique
+  name                 String?
+  password             String
+  participatedEventIds String[] @db.ObjectId
+  createdEventIds      String[] @db.ObjectId
+  participatedEvents   Event[]  @relation(fields: [participatedEventIds], references: [id], name: "participants")
+  createdEvents        Event[]  @relation(fields: [createdEventIds], references: [id])
 }
 
 model Organizer {
@@ -42,16 +43,19 @@ model Organization {
 }
 
 model Event {
-  id              String       @id @default(auto()) @map("_id") @db.ObjectId
-  title           String
-  location        String
-  description     String
-  date            DateTime
-  images          String[]
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  location    String
+  description String
+  date        DateTime
+  images      String[]
+
   participantsIds String[]     @db.ObjectId
-  participants    User[]       @relation(fields: [participantsIds], references: [id])
+  participants    User[]       @relation(fields: [participantsIds], references: [id], name: "participants")
+  userIds         String[]     @db.ObjectId
+  users           User[]       @relation(fields: [userIds], references: [id])
   organization    Organization @relation(fields: [organizationId], references: [id])
-  organizationId  String       
+  organizationId  String
   status          status       @default(PENDING)
 }
 
