@@ -81,6 +81,24 @@ const eventController = {
             console.error("Error adding organizer to organization:", error);
             res.status(500).json({ error: "Unable to add organizer to organization" });
           }
+    },
+    updateStatus : async(req,res)=>{
+        try {
+            const{status} = req.body;
+            const{id} = req.params;
+            const event = await prisma.event.update({
+                where:{
+                    id:id
+                },
+                data:{
+                    status:status
+                }
+            })
+            res.status(201).json({event});
+        } catch (error) {
+            console.error("server error", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
 }
