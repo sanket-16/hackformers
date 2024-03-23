@@ -77,8 +77,15 @@ const organizationController = {
           description,
           images,
           leaderId,
+          organizers: {
+            connect:{id: leaderId}
+          }
           // organizers:[leaderId]
         },
+
+        include:{
+          organizers: true
+        }
       });
       res.status(201).json({ organization });
     } catch (error) {
