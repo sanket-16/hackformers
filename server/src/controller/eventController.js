@@ -76,10 +76,10 @@ const eventController = {
               }
             });
       
-            res.status(200).json({ message: "Organizer added to organization successfully", updateEvent });
+            res.status(200).json({ message: "successful", updateEvent });
           } catch (error) {
-            console.error("Error adding organizer to organization:", error);
-            res.status(500).json({ error: "Unable to add organizer to organization" });
+            console.error("Error adding :", error);
+            res.status(500).json({ error: "Unable to add" });
           }
     },
     updateStatus : async(req,res)=>{
@@ -99,6 +99,38 @@ const eventController = {
             console.error("server error", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
+    },
+    addParticipants:async(req,res)=>{
+
+        try {
+            const { eventId } = req.params;
+            const { userId } = req.body;
+      
+            // Check if organization and organizer exist
+            // const organizationExists = await prisma.organization.findUnique({ where: { id: organizationId } });
+            const userExists = await prisma.user.findUnique({ where: { id:userId } });
+      
+            if (!userExists) {
+              return res.status(404).json({ error: "User  not found" });
+            }
+      
+            // Add the organizer to the organization's list of organizers
+            console.log(userExists)
+            
+            const updateEvent = await prisma.event.update({
+              where: { id: eventId },
+              data: {
+                participants: {
+                  connect: { id: userExists.id } // Connect organizer to organization
+                }
+              }
+            });
+      
+            res.status(200).json({ message: "Participant added successfully", updateEvent });
+          } catch (error) {
+            console.error("Error:", error);
+            res.status(500).json({ error: "Unable to add" });
+          }
     }
 
 }
