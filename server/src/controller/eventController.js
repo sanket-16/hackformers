@@ -103,15 +103,15 @@ const eventController = {
 
     eventAccordingOrg: async(req,res)=>{
         try {
-            const {organizationId} = req.body;
+            const {id} = req.params;
             const events = await prisma.event.findMany({
                 where:{
-                    organizationId: organizationId
+                    organizationId: id
                 },
-                include:{
-                    organization: true,
-                    users: true
-                }
+                // include:{
+                //     organization: true,
+                //     users: true
+                // }
             })
             res.status(200).json({events})
         } catch (error) {
