@@ -171,6 +171,23 @@ const eventController = {
     } 
 
 
+    },
+    getValidEvents : async(req,res)=>{
+
+        try {
+            const events = await prisma.event.findMany({
+                where:{
+                    date:{
+                        gte:new Date().toISOString()
+                    }
+                }
+            });
+            console.log(Date.now)
+            res.status(201).json({events});
+        } catch (error) {
+            console.log(error);
+            res.status(501).json({error});
+        }
     }
 }
 

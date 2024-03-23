@@ -12,5 +12,6 @@ router.put("/updateStatus/:id",passport.authenticate('jwt', { session: false }),
 router.put("/addParticipants/:eventId",passport.authenticate('jwt', { session: false }),eventController.addParticipants);
 router.get("/userCreatedEvents",passport.authenticate('jwt', { session: false }),eventController.userCreatedEvents);
 router.get("/orgEvents",passport.authenticate('jwt', { session: false }),eventController.eventAccordingOrg)
+router.get("/validEvents",eventController.getValidEvents);
 
 module.exports = router;
