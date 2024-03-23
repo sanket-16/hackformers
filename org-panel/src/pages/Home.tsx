@@ -83,6 +83,7 @@ const LoginForm = () => {
             <Input
               id="password"
               value={password}
+              type="password"
               onChange={(event) => setPassword(event.currentTarget.value)}
             />
           </div>

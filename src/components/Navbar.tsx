@@ -13,13 +13,18 @@ const Navbar = () => {
   console.log(data);
   return (
     <nav className="flex justify-between py-10">
-      <h1 className="font-bold text-lg">EventMGMT</h1>
+      <h1 className="font-bold text-lg">
+        <Link to={"/explore"}>EventMGMT</Link>
+      </h1>
       <ul className="flex items-center gap-4">
         <Button asChild variant="ghost">
-          <Link to="/explore">Browse Events</Link>
+          <Link to="/explore">Explore Events</Link>
         </Button>
         <Button asChild variant="ghost">
           <Link to="/org">Create Event</Link>
+        </Button>
+        <Button asChild variant="ghost">
+          <Link to="/org">Become a organizer</Link>
         </Button>
         {status === "success" && (
           <Button asChild variant="outline">
