@@ -1,3 +1,4 @@
+import { getAllOrg } from "@/api/organization";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,48 +7,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { MapPin, Shell } from "lucide-react";
+import { Link } from "react-router-dom";
+
 const Org = () => {
-    const navigate = useNavigate();
+  const { data, status } = useQuery({
+    queryKey: ["getAllOrganizations"],
+    queryFn: () => getAllOrg(),
+  });
+  console.log(data);
+  if (status === "pending")
+    return (
+      <div className="w-full h-[90vh] flex items-center justify-center">
+        <Shell className="animate-spin" />
+      </div>
+    );
+  return (
+    <>
+      <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+          {data?.map((org) => (
+            <Link to={`/org/${org.id}`}>
+              <Card key={org.id} className="w-[350px]">
+                <div className="flex justify-center items-center pt-5">
+                  <img className="rounded-md" src={org.images[0]} alt="hii" />
+                </div>
+                <CardHeader>
+                  <CardTitle>{org.name}</CardTitle>
+                  <CardDescription>{org.description}</CardDescription>
+                </CardHeader>
 
-  return <>
-  <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-      {Array(18)
-        .fill("")
-        .map((_, index) => (
-          <Card
-            onClick={() => navigate("/org/:id")}
-            key={index}
-            className="w-[350px]"
-          >
-            <div className="flex justify-center items-center pt-5">
-              <img
-                className="rounded-md"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1eqbqRA6CWjo8C25j0GBcph8X5MslX2vKOh2BHPmzgkXtzgCN0AvPf58s42__xZlmnvk&usqp=CAU"
-                alt="hii"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle>Title</CardTitle>
-              <CardDescription>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Incidunt maiores perspiciatis, praesentium possimus ad expedita,
-                nemo libero ea repellat vero dolores voluptas.
-              </CardDescription>
-            </CardHeader>
-
-            <CardFooter className="flex justify-between">
-              <Button>View Event</Button>
-              <h3 className="flex items-center">
-                <MapPin size={20} /> Mumbai
-              </h3>
-            </CardFooter>
-          </Card>
-        ))}
-    </div>
-    </div></>;
+                <CardFooter className="flex justify-between">
+                  <Button>View Event</Button>
+                  <h3 className="flex items-center">
+                    <MapPin size={20} /> Mumbai
+                  </h3>
+                </CardFooter>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Org;

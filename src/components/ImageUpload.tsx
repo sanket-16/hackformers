@@ -1,7 +1,7 @@
 import * as LR from "@uploadcare/blocks";
 import blocksStyles from "@uploadcare/blocks/web/lr-file-uploader-regular.min.css?url";
 import { OutputFileEntry } from "@uploadcare/blocks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 LR.registerBlocks(LR);
 
@@ -16,8 +16,13 @@ function formatSize(bytes: number | null) {
   return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 }
 
-const ImageUpload = () => {
-  const [files, setFiles] = useState<OutputFileEntry<"success">[]>([]);
+const ImageUpload = ({
+  files,
+  setFiles,
+}: {
+  files: OutputFileEntry<"success">[];
+  setFiles: React.Dispatch<React.SetStateAction<OutputFileEntry<"success">[]>>;
+}) => {
   const ctxProviderRef = useRef<InstanceType<LR.UploadCtxProvider>>(null);
 
   useEffect(() => {
@@ -31,6 +36,7 @@ const ImageUpload = () => {
         ...e.detail.allEntries.filter((f) => f.status === "success"),
       ] as OutputFileEntry<"success">[]);
     };
+    console.log(files);
 
     /*
       Note: Event binding is the main way to get data and other info from File Uploader.

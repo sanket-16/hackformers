@@ -1,5 +1,5 @@
+import { getOrg } from "@/api/organization";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -7,24 +7,50 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useQuery } from "@tanstack/react-query";
+import { Shell } from "lucide-react";
+import { useParams } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import ImageUpload from "@/components/ImageUpload";
+import { OutputFileEntry } from "@uploadcare/blocks";
+import { useState } from "react";
+import { DatePicker } from "@/components/DatePicker";
 
 const OrgDetail = () => {
+  const [files, setFiles] = useState<OutputFileEntry<"success">[]>([]);
+  const { id } = useParams();
+  const { data, status } = useQuery({
+    queryKey: ["getOrganization"],
+    queryFn: () => getOrg({ id: String(id) }),
+    enabled: id !== undefined || id !== null,
+  });
+  console.log(data);
+  if (status === "pending")
+    return (
+      <div className="w-full h-[60vh] flex items-center justify-center">
+        <Shell className="animate-spin" />
+      </div>
+    );
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 ">
         <div>
           <Carousel className="w-full max-w-lg">
             <CarouselContent>
-              {Array.from({ length: 5 }).map((_, index) => (
+              {data?.organization.images.map((image, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <span className="text-4xl font-semibold">
-                          {index + 1}
-                        </span>
-                      </CardContent>
-                    </Card>
+                    <img className="rounded-md" src={image} />
                   </div>
                 </CarouselItem>
               ))}
@@ -34,26 +60,92 @@ const OrgDetail = () => {
           </Carousel>
         </div>
         <div className="space-y-4">
-          <h1 className="text-xl font-bold">Organization Name</h1>
-          <Button> Book Event Organizer</Button>
+          <h1 className="text-xl font-bold">{data?.organization.name}</h1>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button> Book Event Organizer</Button>
+            </DialogTrigger>
+            <DialogContent className="">
+              <DialogHeader>
+                <DialogTitle>Create Event</DialogTitle>
+                <DialogDescription>
+                  Create your own event and get information about budget and
+                  misc from the event organizer of your choice.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="title" className="text-right">
+                    Title
+                  </Label>
+                  <Input
+                    id="title"
+                    className="col-span-3"
+                    // value={name}
+                    // onChange={(event) => setName(event.currentTarget.value)}
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="location" className="text-right">
+                    Location
+                  </Label>
+                  <Input
+                    id="location"
+                    className="col-span-3"
+                    // value={name}
+                    // onChange={(event) => setName(event.currentTarget.value)}
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="date" className="text-right">
+                    Date
+                  </Label>
+                  <DatePicker />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="description" className="text-right">
+                    Description
+                  </Label>
+                  <textarea
+                    id="description"
+                    className="col-span-3"
+                    // value={description}
+                    // onChange={(event) =>
+                    //   setDescription(event.currentTarget.value)
+                    // }
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="images" className="text-right">
+                    Images
+                  </Label>
+                  <div className="col-span-3">
+                    <ImageUpload files={files} setFiles={setFiles} />
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  // disabled={createOrganizationMutation.status === "pending"}
+                  type="submit"
+                  // onClick={() => {
+                  //   toast.loading("Creating your organization...", {
+                  //     id: "loading",
+                  //   });
+                  //   createOrganizationMutation.mutateAsync();
+                  // }}
+                >
+                  Create Organization
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <div className="space-y-6">
         <h3 className="  pt-5 font-bold">Description :</h3>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-        adipisci illo explicabo inventore, officia cupiditate est porro beatae
-        sint voluptatum dolor aut repellat voluptatem sit quae error commodi.
-        Dolores deleniti, animi ipsa ducimus temporibus ea aliquid alias fuga
-        saepe laborum excepturi incidunt praesentium earum possimus officia
-        accusamus odit in corrupti sint. Totam numquam iste accusantium tenetur
-        perferendis vero quam saepe voluptatum! Iusto recusandae saepe
-        voluptates quasi deserunt cupiditate obcaecati mollitia possimus fugiat
-        doloremque dolorum perferendis unde rem, sed at eum placeat repudiandae
-        debitis, labore quae, aspernatur deleniti quibusdam iure! Odit voluptas
-        accusantium explicabo quisquam aperiam sit praesentium accusamus dolore
-        eius quia enim iusto tenetur hic ex dolor esse consequuntur
-        necessitatibus fugit, perferendis et voluptates a dicta dignissimos.
-        Dolores recusandae impedit aliquam fuga quam?
+        {data?.organization.description}
       </div>
     </>
   );
