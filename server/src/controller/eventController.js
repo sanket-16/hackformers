@@ -99,6 +99,26 @@ const eventController = {
             console.error("server error", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
+    },
+
+    eventAccordingOrg: async(req,res)=>{
+        try {
+            const {organizationId} = req.body;
+            const events = await prisma.event.findMany({
+                where:{
+                    organizationId: organizationId
+                },
+                include:{
+                    organization: true,
+                    users: true
+                }
+            })
+            res.status(200).json({events})
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({"Internal Server Error": error})
+        }
+       
     }
 
 }
