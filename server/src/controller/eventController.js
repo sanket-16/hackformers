@@ -100,7 +100,6 @@ const eventController = {
             res.status(500).json({ error: "Internal Server Error" });
         }
     },
-<<<<<<< HEAD
 
     eventAccordingOrg: async(req,res)=>{
         try {
@@ -118,9 +117,8 @@ const eventController = {
         } catch (error) {
             console.log(error)
             res.status(500).json({"Internal Server Error": error})
-        }
-       
-=======
+        } 
+    },
     addParticipants:async(req,res)=>{
 
         try {
@@ -152,7 +150,6 @@ const eventController = {
             console.error("Error:", error);
             res.status(500).json({ error: "Unable to add" });
           }
->>>>>>> 4d6f8c23d8a09d98e0fd8e22247dc37cc1fcaabb
     }
 
 }
