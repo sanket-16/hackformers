@@ -51,7 +51,7 @@ model Event {
   participantsIds String[]     @db.ObjectId
   participants    User[]       @relation(fields: [participantsIds], references: [id])
   organization    Organization @relation(fields: [organizationId], references: [id])
-  organizationId  String       @db.ObjectId
+  organizationId  String       
   status          status       @default(PENDING)
 }
 
