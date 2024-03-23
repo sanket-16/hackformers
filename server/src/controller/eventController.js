@@ -131,8 +131,28 @@ const eventController = {
             console.error("Error:", error);
             res.status(500).json({ error: "Unable to add" });
           }
-    }
+    },
+    userCreatedEvents :async(req,res)=>{
 
+    try {
+        const events = await prisma.event.findMany({
+            where:{
+                userIds:{
+                    has:req.user.id
+                }
+            }
+        })
+        // JSON.parse(events);
+        // console.log(events);
+        
+        res.status(201).json({events});
+    } catch (error) {
+        console.log(error);
+        res.status(501).json({error});
+    } 
+
+
+    }
 }
 
 module.exports = {eventController};
