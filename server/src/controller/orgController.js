@@ -50,10 +50,10 @@ const orgController = { // user Authentication Controller
   },
   getOrg: async (req, res) => {
     try {
-      const { id } = req.params;
+      // const { id } = req.params;
       const user = await prisma.organizer.findUnique({
         where: {
-          id: id
+          id: req.user.id
         }
       })
       res.status(200).json({ user });
@@ -86,38 +86,54 @@ const organizationController = {
     }
   },
 
-   addOrganizerToOrganization : async (req, res) => {
+  addOrganizerToOrganization: async (req, res) => {
     try {
       const { organizationId } = req.params;
-      const { organizerId } = req.body;
-     
+      const { organizerEmail } = req.body;
+
       // Check if organization and organizer exist
       // const organizationExists = await prisma.organization.findUnique({ where: { id: organizationId } });
-      const organizerExists = await prisma.organizer.findUnique({ where: { id: organizerId } });
-  
+      const organizerExists = await prisma.organizer.findUnique({ where: { email: organizerEmail } });
+
       if (!organizerExists) {
         return res.status(404).json({ error: "Organization or organizer not found" });
       }
-  
+
       // Add the organizer to the organization's list of organizers
-      const organizer = await prisma.organization.update({
-        where: { id: organizerId },
+      const updatedOrganization = await prisma.organization.update({
+        where: { id: organizationId },
         data: {
-          organizationId:organizationId,
-          name:organizerExists.name,
-          email:organizerExists.email,
-          password:organizerExists.password 
+          organizers: {
+            connect: { id: organizerExists.id } // Connect organizer to organization
+          }
         },
+        include: {
+          organizers: true // Include organizers in the response
+        }
       });
-  
-      res.status(200).json({ message: "Organizer added to organization successfully",organizer });
+
+      res.status(200).json({ message: "Organizer added to organization successfully", updatedOrganization });
     } catch (error) {
       console.error("Error adding organizer to organization:", error);
       res.status(500).json({ error: "Unable to add organizer to organization" });
     }
+  },
+  getOrganization: async(req,res)=>{
+    try {
+      const{organizationId} = req.params;
+      const organization = await prisma.organization.findUnique({
+        where:{id:organizationId},
+        include:{
+          organizers:true
+        }
+      })
+      res.status(201).json({organization})
+    } catch (error) {
+      console.log("Error finding Organization");
+      res.status(501).json({"message":"Internal Server Error",error})
+    }
   }
-
 
 }
 
-module.exports = { orgController,organizationController };
+module.exports = { orgController, organizationController };

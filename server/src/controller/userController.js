@@ -6,12 +6,11 @@ const authController = { // user Authentication Controller
   signup: async (req, res) => {  
     console.log(req.body);
     try {
-      const { email, password ,type} = req.body;
+      const { email, password ,} = req.body;
       const hashed_password = bcrypt.hashSync(password, 10);
       const user = await prisma.user.create({
         data: {
           email: email,
-          type: type,
           password: hashed_password,
         }
       })
@@ -39,7 +38,6 @@ const authController = { // user Authentication Controller
       const payload = {
         email: email,
         id: user.id,
-        type:user
       }
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
@@ -51,10 +49,10 @@ const authController = { // user Authentication Controller
   },
   getUser: async(req,res) => {
     try {
-      const {id} = req.params;
+    //   const {id} = req.params;
       const user = await prisma.user.findUnique({
         where: {
-          id: id
+          id: req.user.id
         }
       })
       res.status(200).json({user});
