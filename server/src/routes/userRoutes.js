@@ -9,7 +9,7 @@ const router = express.Router();
 //user auth routes
 router.post("/signup", authController.signup);
 router.post("/signin", authController.signin);
-router.get("/user", authController.getUser);
+router.get("/user",  passport.authenticate('jwt', { session: false }),authController.getUser);
 
 //testing route
 router.get("/protected", passport.authenticate('jwt', { session: false }),(req,res)=>{

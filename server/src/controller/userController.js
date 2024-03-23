@@ -58,6 +58,7 @@ const authController = { // user Authentication Controller
       res.status(200).json({user});
 
     } catch (error) {
+      console.log(error)
       res.status(501).json({"Message": "Internal Server Error"})
     }
   }
