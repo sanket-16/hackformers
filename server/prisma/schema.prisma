@@ -16,7 +16,7 @@ datasource db {
 model User {
   id                   String   @id @default(auto()) @map("_id") @db.ObjectId
   email                String   @unique
-  contact                 String
+  contact                 String?
   password             String
   participatedEventIds String[] @db.ObjectId
   createdEventIds      String[] @db.ObjectId
@@ -31,7 +31,7 @@ model Organizer {
   password       String
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @db.ObjectId
-  contact String
+  contact String?
 }
 
 model Organization {
