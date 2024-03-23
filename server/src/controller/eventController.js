@@ -6,7 +6,7 @@ const eventController = {
     createEvent: async (req, res) => {
         try {
             
-            const{ title, location, description, images, date, organization} = req.body;
+            const{ title, location, description, images, date, organizationId} = req.body;
 
             const existingOrganization = await prisma.organization.findUnique({ where: { id: organization } });
             if (!existingOrganization) {
