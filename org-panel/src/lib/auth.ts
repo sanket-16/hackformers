@@ -43,6 +43,29 @@ export const login = async ({ email, password }: LoginProps) => {
   return data;
 };
 
+export const getUser = async (): Promise<{
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}> => {
+  const token = await localStorage.getItem("token");
+  console.log(token);
+  // const authorizationBearer = `${token.jwt.type} ${token.jwt.token}`;
+  // // console.log(authorizationBearer);
+  const response = await fetch(`${import.meta.env.VITE_API}/org/getUser`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: String(token),
+    },
+  });
+  const data = await response.json();
+  console.log(data, response);
+  return data;
+};
+
 // const loginDetails = async ({ type, phone_number }: LoginProps) => {
 //   const response = await axios.post(`${import.meta.env.VITE_API}/auth/login`, {
 //     mode,
