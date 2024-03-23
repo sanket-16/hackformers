@@ -48,6 +48,7 @@ export const getUser = async (): Promise<{
     id: string;
     email: string;
     name: string;
+    organizationId: string;
   };
 }> => {
   const token = await localStorage.getItem("token");
