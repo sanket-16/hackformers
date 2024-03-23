@@ -8,7 +8,7 @@ const eventController = {
             
             const{ title, location, description, images, date, organizationId} = req.body;
 
-            const existingOrganization = await prisma.organization.findUnique({ where: { id: organization } });
+            const existingOrganization = await prisma.organization.findUnique({ where: { id: organizationId } });
             if (!existingOrganization) {
                 return res.status(404).json({ error: "Organization not found" });
             }
@@ -21,7 +21,12 @@ const eventController = {
                     images: images,
                     status: "PENDING",
                     date: date,
-                    organization: { connect: { id: organization } }
+                    organization: { connect: { id: organizationId } },
+                    users:{
+                        connect:{
+                            id:req.user.id
+                        }
+                    }
                 }
             });
             res.status(200).json({ event });
@@ -31,13 +36,70 @@ const eventController = {
         }
     },
 
-    // getevent: async(req,res) =>{
-    //     try {
+    getEvent: async(req,res) =>{
+        try {
+            const {id} = req.params;
+            const event = await prisma.event.findUnique({
+                where: {
+                    id: id
+                }
+            })
+            res.status(200).json({event})
+        } catch (error) {
+            res.status(500).json({"Internal Server Error": error})
+        }
+    },
+
+    updateUserinEvent:async(req,res)=>{
+
+        try {
+            const { eventId } = req.params;
+            const { userEmail } = req.body;
+      
+            // Check if organization and organizer exist
+            // const organizationExists = await prisma.organization.findUnique({ where: { id: organizationId } });
+            const userExists = await prisma.user.findUnique({ where: { email: userEmail } });
+      
+            if (!userExists) {
+              return res.status(404).json({ error: "User  not found" });
+            }
+      
+            // Add the organizer to the organization's list of organizers
+            console.log(userExists)
             
-    //     } catch (error) {
-    //         res.status(500).json({"Internal Server Error": "error"})
-    //     }
-    // }
+            const updateEvent = await prisma.event.update({
+              where: { id: eventId },
+              data: {
+                users: {
+                  connect: { id: userExists.id } // Connect organizer to organization
+                }
+              }
+            });
+      
+            res.status(200).json({ message: "Organizer added to organization successfully", updateEvent });
+          } catch (error) {
+            console.error("Error adding organizer to organization:", error);
+            res.status(500).json({ error: "Unable to add organizer to organization" });
+          }
+    },
+    updateStatus : async(req,res)=>{
+        try {
+            const{status} = req.body;
+            const{id} = req.params;
+            const event = await prisma.event.update({
+                where:{
+                    id:id
+                },
+                data:{
+                    status:status
+                }
+            })
+            res.status(201).json({event});
+        } catch (error) {
+            console.error("server error", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
 
 }
 
