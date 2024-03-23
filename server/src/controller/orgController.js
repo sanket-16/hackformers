@@ -142,6 +142,16 @@ const organizationController = {
       console.log("Error finding Organization");
       res.status(501).json({"message":"Internal Server Error",error})
     }
+  },
+
+  showAllOrgs: async(req,res) =>{
+    try {
+      const org = await prisma.organization.findMany();
+      res.status(200).json(org);
+
+    } catch (error) {
+      res.status(500).json({"message": "Internal Server Error", error})
+    }
   }
 
 }

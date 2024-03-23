@@ -20,5 +20,6 @@ router.get("/protected", passport.authenticate('jwt', { session: false }),(req,r
 router.post("/createOrg",passport.authenticate('jwt', { session: false }),organizationController.createOrganization);
 router.post("/addOrganizer/:organizationId",passport.authenticate('jwt', { session: false }),organizationController.addOrganizerToOrganization)
 router.get("/getOrganization/:organizationId",passport.authenticate('jwt', { session: false }),organizationController.getOrganization)
+router.get("/getOrganizations",organizationController.showAllOrgs);
 
 module.exports = router;
