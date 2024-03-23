@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
   return (
@@ -81,7 +82,42 @@ const ProfilePage = () => {
             </CardHeader>
 
             <CardFooter className="flex justify-between">
+              <Link to="/profile/booking">
               <Button>View Event</Button>
+              </Link>
+              <h3 className="flex items-center">
+                <MapPin size={20} /> Mumbai
+              </h3>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+   
+
+      <h1 className="text-2xl mt-10">Event You Created</h1>
+      <div className="flex overflow-x-scroll space-x-3 overflow-y-none ">
+        {Array.from({ length: 20 }).map((_, index) => (
+          <Card key={index} className="w-[350px]">
+            <div className="flex justify-center items-center pt-5">
+              <img
+                className="rounded-md"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1eqbqRA6CWjo8C25j0GBcph8X5MslX2vKOh2BHPmzgkXtzgCN0AvPf58s42__xZlmnvk&usqp=CAU"
+                alt="hii"
+              />
+            </div>
+            <CardHeader>
+              <CardTitle>Title</CardTitle>
+              <CardDescription>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Incidunt maiores perspiciatis, praesentium possimus ad expedita,
+                nemo libero ea repellat vero dolores voluptas.
+              </CardDescription>
+            </CardHeader>
+
+            <CardFooter className="flex justify-between">
+              <Link to="/profile/event-id">
+              <Button>View Details</Button>
+              </Link>
               <h3 className="flex items-center">
                 <MapPin size={20} /> Mumbai
               </h3>

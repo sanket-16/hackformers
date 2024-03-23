@@ -10,11 +10,15 @@ import LandingPage from "./pages/LandingPage.tsx";
 import EventDetailPage from "./pages/EventDetailPage.tsx";
 import Org from "./pages/Org.tsx";
 import OrgDetail from "./pages/OrgDetail.tsx";
+import Error404 from "./pages/Error404.tsx";
+import BookingDetails from "./pages/BookingDetails.tsx";
+import CreatedEventDetail from "./pages/CreatedEventDetail.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement :<Error404/>,
     children: [
       {
         path: "/",
@@ -41,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/profile/booking",
+        element: <BookingDetails />,
+      },
+      {
+        path: "profile/event-id",
+        element: <CreatedEventDetail />,
       },
       {
         path: "/auth",
