@@ -5,6 +5,7 @@ const passport = require('passport');
 const router = express.Router()
 
 router.post('/create',passport.authenticate('jwt', { session: false }),announmentController.createAnnouncment)
+router.get('/getAnnouncement',passport.authenticate('jwt', { session: false }),announmentController.getAnnouncement)
 
 module.exports = router
 

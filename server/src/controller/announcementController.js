@@ -21,6 +21,22 @@ const announmentController = {
             res.status(500).json({"Internal error message": error})
         }
        
+    },
+
+    getAnnouncement: async(req,res)=>{
+        try {
+            const{eventId} = req.body;
+            const announcement = await prisma.announcement.findUnique({
+                where:{
+                    eventId: eventId 
+                }
+            })
+            res.status(200).json({announcement});
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({"Internal Error": error});
+        }
+     
     }
 }
 
