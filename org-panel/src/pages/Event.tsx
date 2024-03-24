@@ -1,4 +1,8 @@
-import { getEventsByOrg, updateEventStatus } from "@/api/event";
+import {
+  addAnnouncement,
+  getEventsByOrg,
+  updateEventStatus,
+} from "@/api/event";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,12 +19,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { getUser } from "@/lib/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Shell } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const Event = () => {
+  const [announcement, setAnnouncement] = useState("");
+  const [description, setDescription] = useState("");
   const queryClient = useQueryClient();
   const { data, status } = useQuery({
     queryKey: ["getUser"],
@@ -46,6 +55,22 @@ const Event = () => {
       toast.dismiss("loading");
       toast.error("Failed to updat status.Please try again!");
       queryClient.invalidateQueries({ queryKey: ["getEventsByOrganization"] });
+      console.log(error);
+    },
+  });
+  const addAnnouncementMutation = useMutation({
+    mutationKey: ["addAnnouncement"],
+    mutationFn: addAnnouncement,
+    onSuccess: (data) => {
+      toast.dismiss("loading");
+      toast.success("Successfully added announcement.");
+      // queryClient.invalidateQueries({ queryKey: ["getEventsByOrganization"] });
+      console.log(data);
+    },
+    onError: (error) => {
+      toast.dismiss("loading");
+      toast.error("Failed to update announcement.Please try again!");
+      // queryClient.invalidateQueries({ queryKey: ["getEventsByOrganization"] });
       console.log(error);
     },
   });
@@ -169,6 +194,18 @@ const Event = () => {
                         <span className="flex items-center">
                           <span> Location : {event.location}</span>
                         </span>
+                        <span className="flex items-center">
+                          <span>
+                            Number of participants so far :{" "}
+                            {event?.participantsIds.length}
+                          </span>
+                        </span>
+                        <span className="flex items-center">
+                          <span>
+                            Number of users that have access so far :{" "}
+                            {event?.userIds.length}
+                          </span>
+                        </span>
                         <span>
                           Event Date :{" "}
                           {new Date(event.date).toLocaleDateString()}
@@ -178,10 +215,40 @@ const Event = () => {
                           <span>{event.description}</span>
                         </p>
                       </div>
-                      <DialogFooter>
-                        <Button type="submit">Accept</Button>
-                        <Button type="submit">Reject</Button>
-                      </DialogFooter>
+                      <div className="space-y-4">
+                        <Label htmlFor="announcement" className="font-bold">
+                          Add Announcement
+                        </Label>
+                        <div className="flex gap-6 items-center">
+                          <Input
+                            value={announcement}
+                            onChange={(event) =>
+                              setAnnouncement(event.currentTarget.value)
+                            }
+                          />
+                          <Input
+                            value={description}
+                            onChange={(event) =>
+                              setDescription(event.currentTarget.value)
+                            }
+                          />
+                          <Button
+                            onClick={() => {
+                              toast.loading("Creating announcement...", {
+                                id: "loading",
+                              });
+                              addAnnouncementMutation.mutateAsync({
+                                description,
+                                title: announcement,
+                                eventId: event.id,
+                                time: new Date(),
+                              });
+                            }}
+                          >
+                            Add
+                          </Button>
+                        </div>
+                      </div>
                     </DialogContent>
                   </Dialog>
                 </CardFooter>
