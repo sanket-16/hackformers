@@ -25,7 +25,7 @@ const announmentController = {
 
     getAnnouncement: async(req,res)=>{
         try {
-            const{eventId} = req.body;
+            const{eventId} = req.params;
             const announcement = await prisma.announcement.findUnique({
                 where:{
                     eventId: eventId 

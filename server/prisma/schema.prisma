@@ -59,7 +59,7 @@ model Event {
   organization    Organization @relation(fields: [organizationId], references: [id])
   organizationId  String        @db.ObjectId
   status          status       @default(PENDING)
-  announcements Announcement?
+  announcements Announcement[]
 }
 
 model Announcement{
@@ -67,7 +67,7 @@ model Announcement{
   title String
   description String
   time DateTime  
-  eventId String  @db.ObjectId @unique
+  eventId String  @db.ObjectId 
   event Event  @relation(fields: [eventId], references: [id])
 }
 
