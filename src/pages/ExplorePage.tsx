@@ -1,3 +1,4 @@
+import { getValidEvents } from "@/api/event";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -6,44 +7,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { MapPin, Shell } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ExplorePage() {
-  const navigate = useNavigate();
+  const { data, status } = useQuery({
+    queryKey: ["getValidEvents"],
+    queryFn: () => getValidEvents(),
+  });
+  if (status === "pending")
+    return (
+      <div className="flex items-center justify-center w-full h-[80vh]">
+        <Shell className="animate-spin" />
+      </div>
+    );
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-      {Array(18)
-        .fill("")
-        .map((_, index) => (
-          <Card
-            onClick={() => navigate("/explore/:id")}
-            key={index}
-            className="w-[350px]"
-          >
-            <div className="flex justify-center items-center pt-5">
-              <img
-                className="rounded-md"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1eqbqRA6CWjo8C25j0GBcph8X5MslX2vKOh2BHPmzgkXtzgCN0AvPf58s42__xZlmnvk&usqp=CAU"
-                alt="hii"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle>Title</CardTitle>
-              <CardDescription>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Incidunt maiores perspiciatis, praesentium possimus ad expedita,
-                nemo libero ea repellat vero dolores voluptas.
-              </CardDescription>
-            </CardHeader>
+      {data?.events
+        .filter((event) => event.status === "ACCEPT")
+        .map((event, index) => (
+          <Link key={index} to={`/explore/${event.id}`}>
+            <Card className="max-w-[350px] p-4">
+              <div className="flex justify-center items-center min-h-56">
+                <img className="rounded-md" src={event.images[0]} alt="hii" />
+              </div>
+              <CardHeader>
+                <CardTitle>{event.title}</CardTitle>
+                <CardDescription>{event.description}</CardDescription>
+              </CardHeader>
 
-            <CardFooter className="flex justify-between">
-              <Button>View Event</Button>
-              <h3 className="flex items-center">
-                <MapPin size={20} /> Mumbai
-              </h3>
-            </CardFooter>
-          </Card>
+              <CardFooter className="flex justify-between">
+                <Button>View Event</Button>
+                <h3 className="flex items-center">
+                  <MapPin size={20} /> {event.location}
+                </h3>
+              </CardFooter>
+            </Card>
+          </Link>
         ))}
     </div>
   );

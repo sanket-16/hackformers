@@ -16,7 +16,7 @@ datasource db {
 model User {
   id                   String   @id @default(auto()) @map("_id") @db.ObjectId
   email                String   @unique
-  name                 String?
+  contact                 String?
   password             String
   participatedEventIds String[] @db.ObjectId
   createdEventIds      String[] @db.ObjectId
@@ -31,6 +31,7 @@ model Organizer {
   password       String
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @db.ObjectId
+  contact String?
 }
 
 model Organization {
@@ -58,6 +59,16 @@ model Event {
   organization    Organization @relation(fields: [organizationId], references: [id])
   organizationId  String        @db.ObjectId
   status          status       @default(PENDING)
+  announcements Announcement?
+}
+
+model Announcement{
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  time DateTime  
+  eventId String  @db.ObjectId @unique
+  event Event  @relation(fields: [eventId], references: [id])
 }
 
 enum status {
