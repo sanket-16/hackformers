@@ -32,7 +32,7 @@ type Event = {
   description: string;
   date: Date;
   images: string[];
-  participantIds: string[];
+  participantsIds: string[];
   userIds: string[];
   organizationId: string;
   status: "ACCEPT" | "REJECT" | "PENDING";
@@ -52,7 +52,6 @@ export const getEventsByOrg = async ({
 }): Promise<{
   events: Event[];
 }> => {
-  console.log("hit");
   const token = await localStorage.getItem("token");
   console.log(token);
 
@@ -63,6 +62,36 @@ export const getEventsByOrg = async ({
         "Content-Type": "application/json",
         Authorization: String(token),
       },
+    }
+  );
+  const data = await response.json();
+  console.log(data, response);
+  return data;
+};
+
+export const addAnnouncement = async ({
+  title,
+  description,
+  time,
+  eventId,
+}: {
+  title: string;
+  description: string;
+  time: Date;
+  eventId: string;
+}) => {
+  const token = await localStorage.getItem("token");
+  console.log(token);
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API}/announcement/create`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: String(token),
+      },
+      body: JSON.stringify({ title, description, time, eventId }),
     }
   );
   const data = await response.json();
